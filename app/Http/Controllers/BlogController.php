@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\Vrm\Notify;
 use App\Models\Vrm\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
@@ -145,7 +148,11 @@ class BlogController extends Controller
         //Notification
         $notify = Notify::notify();
         $data['notify'] = Notify::$notify($message);
+    
+      
+        $data['blogs'] = Blog::get();
 
+        dd($data);
         //Open Page
         return $this->show($data, 'blog');
     }
@@ -212,7 +219,7 @@ class BlogController extends Controller
     }
 
     public function createBlog($message = ''){
-        $view = 'home';
+        $view = 'create';
         $page = Str::plural($this->MainFolder) . $this->SubFolder .  "/$view";
 
         // Load Settings
@@ -225,5 +232,73 @@ class BlogController extends Controller
 
         //Open Page
         return $this->show($data, 'blog');
+    }
+
+    public function contactUs($message = ''){
+        $view = 'contact-us';
+        $page = Str::plural($this->MainFolder) . $this->SubFolder .  "/$view";
+
+        // Load Settings
+        $data = $this->loadSettings($page);
+        $data['other']->view = $view;
+
+        //Notification
+        $notify = Notify::notify();
+        $data['notify'] = Notify::$notify($message);
+
+        //Open Page
+        return $this->show($data, 'blog');
+    }
+
+    public function store(Request $request){
+        // Validate Form Data
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'title'=>'',
+            'content'=>'',
+            'category'=>'',
+            // 'path'=>'',         
+        ]);
+
+        // On Validation Failphp
+        if ($validator->fails()) {
+            session()->flash('notification', 'error');
+            Notify::error('Please check the form for errors.');
+
+            // Return Error Message
+            return redirect()->back()->withErrors($validator)->withInput($request->input());
+        }
+        
+        // Validate Form Data
+        $validated = $validator->validated();
+
+        // Add User Role
+        $insertFrom['title'] = $validated['title'];
+        $insertFrom['category'] = $validated['category'];
+        // $insertFrom['path'] = $validated['path'];
+        $insertFrom['content'] = $validated['content'];
+       
+        // usermeta
+
+        $saved = new \App\Models\Blog();
+        $saved->title = $insertFrom['title'];
+        $saved->content = $insertFrom['content'];
+        // $saved->path = $insertFrom['path'];
+        $saved->category = $insertFrom['category'];
+        // $saved->flag = 0;
+        $saved->save();
+
+        if($saved){
+        
+        // Open Page
+         return $this->showBlog($request,); //->with('message',
+        }
+
+         // Notification
+         session()->flash('notification', 'error');
+         $message = '<strong>Error:</strong>post was not created, kindly try again.';
+ 
+         // Open Page
+         return $this->createBlog($request, $message); //->with('message',
     }
 }
