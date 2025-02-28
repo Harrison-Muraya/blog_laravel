@@ -1,5 +1,4 @@
 @extends("$theme_dir.layouts.$layoutName")
-
 {{-- {{dd($theme_dir, $layoutName)}} --}}
 {{-- Content --}}
 @section('content')

@@ -181,7 +181,7 @@ class BlogController extends Controller
 
     public function showBlog($message = ''){
         $view = 'blog-content';
-        $page = Str::plural($this->MainFolder) . $this->SubFolder .  "/$view";
+        $page = Str::plural($this->MainFolder) . $this->SubFolder . "/$view";
 
         // Load Settings
         $data = $this->loadSettings($page);
@@ -196,6 +196,22 @@ class BlogController extends Controller
     }
 
     public function home($message = ''){
+        $view = 'home';
+        $page = Str::plural($this->MainFolder) . $this->SubFolder .  "/$view";
+
+        // Load Settings
+        $data = $this->loadSettings($page);
+        $data['other']->view = $view;
+
+        //Notification
+        $notify = Notify::notify();
+        $data['notify'] = Notify::$notify($message);
+
+        //Open Page
+        return $this->show($data, 'blog');
+    }
+
+    public function createBlog($message = ''){
         $view = 'home';
         $page = Str::plural($this->MainFolder) . $this->SubFolder .  "/$view";
 
