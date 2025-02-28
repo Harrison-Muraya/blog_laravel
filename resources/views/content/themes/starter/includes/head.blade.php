@@ -9,3 +9,11 @@
 	<link rel="stylesheet" href="{{ asset($plugin_assets) }}/datepicker/css/datepicker-bs5.min.css">
 	<link rel="stylesheet" href="{{ asset($plugin_assets) }}/datepicker/css/datepicker.min.css">
 	<link rel="stylesheet" href="{{ asset($plugin_assets) }}/custom/css/style.min.css?{{ time() }}">
+
+
+	 <!-- Vendor CSS Files -->
+	 <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	 <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+	 <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+	 <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+	 <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
