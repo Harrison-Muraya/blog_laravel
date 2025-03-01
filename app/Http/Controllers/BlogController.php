@@ -152,7 +152,7 @@ class BlogController extends Controller
       
         $data['blogs'] = Blog::get();
 
-        dd($data);
+        // dd($data);
         //Open Page
         return $this->show($data, 'blog');
     }
@@ -186,7 +186,8 @@ class BlogController extends Controller
         return $this->show($data, $layout);
     }
 
-    public function showBlog($message = ''){
+    public function showBlog(Request $request, $message = ''){
+        // dd($request->all());
         $view = 'blog-content';
         $page = Str::plural($this->MainFolder) . $this->SubFolder . "/$view";
 
@@ -197,6 +198,8 @@ class BlogController extends Controller
         //Notification
         $notify = Notify::notify();
         $data['notify'] = Notify::$notify($message);
+
+        $data['blogs'] = Blog::where("id", )->get();
 
         //Open Page
         return $this->show($data, 'blog');

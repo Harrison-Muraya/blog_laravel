@@ -73,14 +73,40 @@ Route::group(['prefix' => 'vrm'], function () {
     });
 });
 
+
+// TODO: LOGIN
+Route::controller(App\Http\Controllers\Front\LoginController::class)->group(function () {
+    Route::get('/account-signin', 'index')->name('account-signin');
+    Route::post('/account-signin/access', 'login');
+    Route::get('/account-signin/logout', 'logout')->name('account-signin/logout');
+});
+
+// TODO: REGISTER
+Route::controller(App\Http\Controllers\Front\RegisterController::class)->group(function () {
+    Route::get('/account-signup', 'index')->name('account-signup');
+    Route::post('/account-signup', 'register');
+    Route::get('/account-verification', 'verification');
+    Route::post('/account-verification/reverify', 'reverify');
+});
+
+
 // TODO: LIVE WIRE
 // Route::get('/', App\Livewire\LiveSetting::class)->name('home');
+
 Route::get('/',[App\Http\Controllers\BlogController::class, 'home'])->name('home');
-Route::get('/blogs',[App\Http\Controllers\BlogController::class, 'index'])->name('blogs');
-Route::get('/blogcontent',[App\Http\Controllers\BlogController::class, 'showBlog'])->name('blogcontent');
-Route::get('/contact-us', [App\Http\Controllers\BlogController::class, 'contactUs'])->name('contact');
+
+Route::middleware([CheckRolePermission::class . ':blog'])->group(function () {
+
+    Route::group(['prefix' => 'blog'], function () {
+
+        // Route::get('/',[App\Http\Controllers\BlogController::class, 'home'])->name('home');
+        Route::get('/blogs',[App\Http\Controllers\BlogController::class, 'index'])->name('blogs');
+        // Route::get('/blogcontent/{id}',[App\Http\Controllers\BlogController::class, 'showBlog'])->name('blogcontent');
+        Route::get('/blogcontent',[App\Http\Controllers\BlogController::class, 'showBlog'])->name('blogcontent');
+        Route::get('/contact-us', [App\Http\Controllers\BlogController::class, 'contactUs'])->name('contact');
 
 
-Route::get('/create', [App\Http\Controllers\BlogController::class, 'createBlog']);
-Route::post('/save', [App\Http\Controllers\BlogController::class, 'store'])->name('storeblog');
-
+        Route::get('/create', [App\Http\Controllers\BlogController::class, 'createBlog']);
+        Route::post('/save', [App\Http\Controllers\BlogController::class, 'store'])->name('storeblog');
+    });
+});

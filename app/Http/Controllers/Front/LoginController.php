@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Models\Vrm\Notify;
 use App\Models\Vrm\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Vrm\Notify;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -117,7 +117,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private function show($data, $layout = 'log')
+    private function show($data, $layout = 'blog')
     {
         // Add Layout
         $data['layoutName'] = $layout;
@@ -216,19 +216,19 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
 
             // Generate Token
-            \App\Services\TokenService::createToken(Auth::user(), 'apptoken', ['porject-bid'], now()->addDay());
+            // \App\Services\TokenService::createToken(Auth::user(), 'apptoken', ['porject-bid'], now()->addDay());
 
             // ? URL
-            $redirect_url = '/portal/dashboard';
+            // $redirect_url = '/portal/dashboard';
 
-            // Check if is in cart
-            $_fromcart = $request->get('r');
-            if (!is_null($_fromcart) && !empty($_fromcart)) {
-                $redirect_url = '/cart';
-            }
+            // // Check if is in cart
+            // $_fromcart = $request->get('r');
+            // if (!is_null($_fromcart) && !empty($_fromcart)) {
+            //     $redirect_url = '/cart';
+            // }
 
             // Authentication passed...
-            return redirect()->intended("$redirect_url");
+            return redirect()->intended("/blog/blogs");
         }
 
         // ? Message
@@ -241,7 +241,7 @@ class LoginController extends Controller
                 // ? Return Error Message
                 session()->flash('notification', 'error');
                 // ? Redirect to account activation
-                return redirect('/account-verification')->withInput($request->input())->with('message', "Please activate your account first. <strong>Request a new verification link</strong>");
+                $message = "Please activate your account first. <strong>Request a new verification link</strong>";
             }
         }
 
